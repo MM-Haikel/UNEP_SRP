@@ -1,41 +1,32 @@
-// const NativeUI = require('NativeUI');
-// const Textures = require('Textures');
-// const Patches = require('Patches');
+// Load the modules
+const Textures = require("Textures");
+const Patches = require('Patches');
+const D = require('Diagnostics');
 
-// Promise.all([
-//     Textures.findFirst('icon_1'),
-//     Textures.findFirst('icon_2'),
-//     Textures.findFirst('icon_3'),
-// ]).then(onReady);
+// Begin our Promise and go find the texture
+Promise.all([
+    
+    Textures.findFirst('galleryTexture0'),
 
+]).then(function (r) {
 
-// function onReady(assets) {
+    // Set the galleryTexture
+    const galleryTexture = r[0]
 
-//     const texture0 = assets[0];
-//     const texture1 = assets[1];
-//     const texture2 = assets[2];
+    // Create a monitor that watches the width of the galleryTexture
+    // Use "fireOnInitialValue: true" so it fires when the filter loads
+    galleryTexture.width.monitor({fireOnInitialValue: true}).subscribe(function(val) {
 
-//     const picker = NativeUI.picker;
+        // Once we know the width, pass it to the patch editor
+        Patches.inputs.setScalar('galleryTextureWidth', val.newValue); 
+    });
 
-//     const index = 0;
-//     const selection = 0;
+    // Create a monitor that watches the height of the galleryTexture
+    // Use "fireOnInitialValue: true" so it fires when the filter loads
+    galleryTexture.height.monitor({fireOnInitialValue: true}).subscribe(function(val) {
 
-//     const configuration = {
+        // Once we know the height, pass it to the patch editor
+        Patches.inputs.setScalar('galleryTextureHeight', val.newValue); 
+    });
 
-//       selectedIndex: index,
-
-//       items: [
-//         {image_texture: texture0},
-//         {image_texture: texture1},
-//         {image_texture: texture2}
-//       ]
-
-//     };
-
-//     picker.configure(configuration);
-//     picker.visible = true;
-
-//     picker.selectedIndex.monitor().subscribe(function(index) {
-//       Patches.inputs.setScalar('selection', index.newValue);
-//     });
-// }
+})
